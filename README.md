@@ -37,7 +37,7 @@
     <td width="70%" valign="top" style="padding-right: 16px;">
       <h3>Custom sprites</h3>
       <ul>
-        <li>Uses Minecrafts indentifier for custom sprites</li>
+        <li>Uses either, url, file or minecraft identifier for custom sprites</li>
       </ul>
     </td>
     <td width="30%" align="right" valign="top">
