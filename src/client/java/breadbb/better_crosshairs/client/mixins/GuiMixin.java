@@ -1,6 +1,7 @@
 package breadbb.better_crosshairs.client.mixins;
 
 import breadbb.better_crosshairs.client.config.CrosshairConfig;
+import breadbb.better_crosshairs.client.config.CrosshairTextures;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -38,7 +39,8 @@ public class GuiMixin {
             return;
         }
 
-        Identifier id = cfg.spriteId(betterCrosshairs$canAttack());
+        boolean canAttack = betterCrosshairs$canAttack();
+        CrosshairTextures.Resolved resolved = CrosshairTextures.resolve(canAttack ? cfg.attackSprite : cfg.normalSprite, CrosshairConfig.defaultSpriteId(canAttack));
         int size = cfg.size;
         int drawX = (extractor.guiWidth() - size) / 2 + cfg.offsetX;
         int drawY = (extractor.guiHeight() - size) / 2 + cfg.offsetY;
@@ -49,12 +51,20 @@ public class GuiMixin {
             int thickness = Math.max(1, Math.round(size / 15.0F));
             int outlineColor = cfg.outlineArgb(opacity);
             for (int[] d : BETTER_CROSSHAIRS$OUTLINE_OFFSETS) {
-                extractor.blitSprite(RenderPipelines.GUI_TEXTURED, id,
-                        drawX + d[0] * thickness, drawY + d[1] * thickness, size, size, outlineColor);
+                betterCrosshairs$blit(extractor, resolved, drawX + d[0] * thickness, drawY + d[1] * thickness, size, outlineColor);
             }
         }
+        betterCrosshairs$blit(extractor, resolved, drawX, drawY, size, cfg.argb(opacity));
+    }
 
-        extractor.blitSprite(RenderPipelines.GUI_TEXTURED, id, drawX, drawY, size, size, cfg.argb(opacity));
+    private static void betterCrosshairs$blit(GuiGraphicsExtractor extractor, CrosshairTextures.Resolved sprite,
+                                              int x, int y, int size, int color) {
+        if (sprite.crosshairtype == CrosshairTextures.Type.TEXTURE) {
+            extractor.blit(RenderPipelines.GUI_TEXTURED, sprite.id, x, y, 0.0F, 0.0F,
+                    size, size, sprite.width, sprite.height, sprite.width, sprite.height, color);
+        } else {
+            extractor.blitSprite(RenderPipelines.GUI_TEXTURED, sprite.id, x, y, size, size, color);
+        }
     }
 
     @WrapOperation(

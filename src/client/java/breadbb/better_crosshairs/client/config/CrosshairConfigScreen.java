@@ -56,8 +56,8 @@ public class CrosshairConfigScreen extends Screen {
         labeledText(rightCol, y, half, "Outline color", "Color of the outline in hex format, e.g. #000000.", "#RRGGBB", cfg.outlineColor, 9, s -> cfg.outlineColor = s);
         y += ROW_STRIDE;
 
-        labeledText(left, y, half, "Normal sprite", "Sprite for the normal crosshair, e.g. minecraft:hud/crosshair.", "namespace:path", cfg.normalSprite, 256, s -> cfg.normalSprite = s);
-        labeledText(rightCol, y, half, "Attack sprite", "Sprite for the crosshair when its good to hit the target.", "namespace:path", cfg.attackSprite, 256, s -> cfg.attackSprite = s);
+        labeledText(left, y, half, "Normal sprite", "Sprite for the normal crosshair, e.g. (minecraft:hud/crosshair, https://i.imgur.com/123, C:\\Photos\\dog.png).", "id, file, or URL", cfg.normalSprite, 256, s -> cfg.normalSprite = s);
+        labeledText(rightCol, y, half, "Attack sprite", "Sprite for the crosshair when its good to hit the target.", "id, file, or URL", cfg.attackSprite, 256, s -> cfg.attackSprite = s);
         y += ROW_STRIDE;
 
         labeledToggle(left, y, half, "Shield fade", "Fade of crosshair when aiming at someone who is blocking with a shield.", () -> cfg.shieldFade, () -> cfg.shieldFade = !cfg.shieldFade);

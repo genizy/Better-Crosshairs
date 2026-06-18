@@ -116,12 +116,8 @@ public class CrosshairConfig {
         indicatorColor = d.indicatorColor;
     }
 
-    public Identifier spriteId(boolean canAttack) {
-        Identifier id = Identifier.tryParse(canAttack ? attackSprite : normalSprite);
-        if (id == null) {
-            id = Identifier.tryParse(canAttack ? DEFAULT_ATTACK_SPRITE : DEFAULT_NORMAL_SPRITE);
-        }
-        return id;
+    public static Identifier defaultSpriteId(boolean canAttack) {
+        return Identifier.tryParse(canAttack ? DEFAULT_ATTACK_SPRITE : DEFAULT_NORMAL_SPRITE);
     }
 
     public int argb() {
