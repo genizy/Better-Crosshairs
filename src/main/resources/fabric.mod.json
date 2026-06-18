@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "better_crosshairs",
+  "version": "${version}",
+  "name": "Better Crosshairs",
+  "description": "Better customizable crosshairs",
+  "authors": ["breadbb"],
+  "contact": {"discord": "https://discord.gg/gn-math", "github": "https://github.com/genizy"},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/better_crosshairs/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "breadbb.better_crosshairs.client.Better_crosshairsClient"
+    ],
+    "modmenu": [
+      "breadbb.better_crosshairs.client.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "better_crosshairs.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=${minecraft_version}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
