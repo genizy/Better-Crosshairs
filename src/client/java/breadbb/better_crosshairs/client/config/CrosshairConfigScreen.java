@@ -21,7 +21,7 @@ public class CrosshairConfigScreen extends Screen {
     private static final int CTRL_H = 16;
     private static final int ROW_STRIDE = 26;
     private static final int BUTTON_H = 18;
-    private static final int LABELED_ROWS = 9;
+    private static final int LABELED_ROWS = 10;
 
     private final Screen parent;
     private final CrosshairConfig cfg;
@@ -54,6 +54,10 @@ public class CrosshairConfigScreen extends Screen {
 
         labeledText(left, y, half, "Color", "Color of the crosshair in hex format, e.g. #FF0000.", "#RRGGBB", cfg.color, 9, s -> cfg.color = s);
         labeledText(rightCol, y, half, "Outline color", "Color of the outline in hex format, e.g. #000000.", "#RRGGBB", cfg.outlineColor, 9, s -> cfg.outlineColor = s);
+        y += ROW_STRIDE;
+
+        labeledText(left, y, half, "Attack color", "Color of the crosshair when an attack is considered ready.", "#RRGGBB", cfg.attackColor, 9, s -> cfg.attackColor = s);
+        labeledEnum(rightCol, y, half, "Attack identifier", "What should count as being able to attack?", v -> cfg.attackIdentifier = v);
         y += ROW_STRIDE;
 
         labeledText(left, y, half, "Normal sprite", "Sprite for the normal crosshair, e.g. (minecraft:hud/crosshair, https://i.imgur.com/123, C:\\Photos\\dog.png).", "id, file, or URL", cfg.normalSprite, 256, s -> cfg.normalSprite = s);
@@ -113,6 +117,36 @@ public class CrosshairConfigScreen extends Screen {
         box.setResponder(setter);
         box.setTooltip(Tooltip.create(Component.literal(tip)));
         addRenderableWidget(box);
+    }
+
+    private void labeledEnum(int x, int y, int w, String name, String tip, Consumer<CrosshairConfig.AttackIdentifier> setter) {
+        addLabel(x, y, w, name);
+
+        Button button = Button.builder(
+                        Component.literal(formatAttackIdentifier(cfg.attackIdentifier)),
+                        b -> {
+                            CrosshairConfig.AttackIdentifier next = switch (cfg.attackIdentifier) {
+                                case IN_RANGE -> CrosshairConfig.AttackIdentifier.ATTACK_COOLDOWN_READY;
+                                case ATTACK_COOLDOWN_READY -> CrosshairConfig.AttackIdentifier.BOTH;
+                                case BOTH -> CrosshairConfig.AttackIdentifier.IN_RANGE;
+                            };
+
+                            setter.accept(next);
+                            b.setMessage(Component.literal(formatAttackIdentifier(next)));
+                        })
+                .bounds(x, y + LABEL_H, w, CTRL_H)
+                .tooltip(Tooltip.create(Component.literal(tip)))
+                .build();
+
+        addRenderableWidget(button);
+    }
+
+    private static String formatAttackIdentifier(CrosshairConfig.AttackIdentifier id) {
+        return switch (id) {
+            case IN_RANGE -> "In Range";
+            case ATTACK_COOLDOWN_READY -> "Attack Cooldown Ready";
+            case BOTH -> "Both";
+        };
     }
 
     private static Component onOff(boolean on) {

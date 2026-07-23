@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static breadbb.better_crosshairs.client.Better_crosshairsClient.betterCrosshairs$canAttack;
+
 public class CrosshairConfig {
 
     public static final String DEFAULT_NORMAL_SPRITE = "minecraft:hud/crosshair";
@@ -30,6 +32,13 @@ public class CrosshairConfig {
     public String outlineColor = "#000000";
     public String normalSprite = DEFAULT_NORMAL_SPRITE;
     public String attackSprite = DEFAULT_ATTACK_SPRITE;
+    public String attackColor = "#FF0000";
+    public AttackIdentifier attackIdentifier = AttackIdentifier.BOTH;
+    public enum AttackIdentifier {
+        IN_RANGE,
+        ATTACK_COOLDOWN_READY,
+        BOTH
+    }
 
     public boolean shieldFade = true;
     public int shieldFadeOpacity = 25;
@@ -114,6 +123,8 @@ public class CrosshairConfig {
         indicatorScale = d.indicatorScale;
         indicatorOpacity = d.indicatorOpacity;
         indicatorColor = d.indicatorColor;
+        attackColor = d.attackColor;
+        attackIdentifier = d.attackIdentifier;
     }
 
     public static Identifier defaultSpriteId(boolean canAttack) {
@@ -125,7 +136,7 @@ public class CrosshairConfig {
     }
 
     public int argb(int opacityPercent) {
-        return (alpha(opacityPercent) << 24) | parseRgb(color, 0xFFFFFF);
+        return (alpha(opacityPercent) << 24) | parseRgb((betterCrosshairs$canAttack() ? attackColor : color), 0xFFFFFF);
     }
 
     public int outlineArgb() {

@@ -8,12 +8,13 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+
+import static breadbb.better_crosshairs.client.Better_crosshairsClient.betterCrosshairs$canAttack;
 
 @Mixin(Gui.class)
 public class GuiMixin {
@@ -140,17 +141,6 @@ public class GuiMixin {
         original.call(extractor, pipeline, sprite, newTexW, newTexH, u, v, dx, dy, newBlitW, newBlitH);
     }
 
-    private static boolean betterCrosshairs$canAttack() {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player == null) {
-            return false;
-        }
-        if (player.getAttackStrengthScale(0.0F) < 1.0F) {
-            return false;
-        }
-        return mc.crosshairPickEntity instanceof LivingEntity living && living.isAlive();
-    }
 
     private static boolean betterCrosshairs$targetBlocking() {
         return Minecraft.getInstance().crosshairPickEntity instanceof LivingEntity living && living.isBlocking();
